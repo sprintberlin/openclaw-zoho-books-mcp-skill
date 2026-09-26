@@ -7,6 +7,8 @@ This repository contains the public source for the ClawHub skill [`@sprintcx/zoh
 ## What This Skill Includes
 
 - Agent Skill instructions in `SKILL.md` (portable SKILL.md format)
+- One comprehensive Books Accountant Action profile for normal operational bookkeeping
+- Direct GitHub issue and pull request contribution workflow for humans and agents
 - ClawHub release card metadata in `skill-card.md`
 - Ready-to-use Python helpers for organizations and records (contacts, invoices, expenses, bills, items)
 - Multi-account profile support for single-org and multi-tenant setups
@@ -91,8 +93,9 @@ python3 scripts/list_records.py invoices --limit 20
 
 ## Repository Files
 
+- `CONTRIBUTING.md`: Direct GitHub issue and pull request workflow for humans and agents.
 - `SKILL.md`: Agent Skill instructions.
-- `references/ACTION_PROFILES.md`: Least-privilege Books Action profiles.
+- `references/ACTION_PROFILES.md`: Comprehensive Books Accountant Action profile and least-privilege guidance.
 - `references/COMMON_WORKFLOWS.md`: Verified workflows for frequent Books tasks.
 - `references/ZOHO_BOOKS_MCP_ACTIONS.md`: Complete catalog of 1,090 known Books Actions.
 - `references/MULTI_ACCOUNT.md`: Portable single-account and multi-account endpoint profiles.
@@ -105,6 +108,10 @@ python3 scripts/list_records.py invoices --limit 20
 ## Security Notes
 
 The bundled scripts call `mcporter` directly through `subprocess.run([...])` without shell expansion. Accounting data is sensitive. Load only required records and never copy contents into chats, logs, or repositories.
+
+## Contributing
+
+Bug reports, documentation corrections, missing profile Actions, and pull requests are welcome. Agents using this skill must file or link reproducible skill defects as part of completing the task. Use the normal GitHub CLI workflow described in [`CONTRIBUTING.md`](CONTRIBUTING.md); never include MCP URLs, tokens, customer identifiers, personal data, or accounting records.
 
 ## Publish
 
