@@ -102,15 +102,26 @@ Use the schema shown by the live MCP server when it differs. Write nested argume
 - Search for duplicates using reference number plus contact and amount before creating a document or payment.
 - Never fabricate contact IDs, account IDs, tax IDs, item IDs, payment IDs, document IDs, or organization IDs.
 - Creating a payment, refund, bank match, reconciliation, credit application, or write-off changes accounting state. Require an explicit task and verify the resulting ledger state.
-- `mark ... void`, delete, and cancellation Actions are destructive. Keep them out of normal profiles.
+- `mark ... void`, delete, and cancellation Actions are destructive. Keep them out of normal profiles unless the task explicitly requires a correction.
 - Binary attachment Actions vary by server and may be unavailable or unreliable. Verify the transferred file by reading it back; use a confirmed REST upload workflow when MCP does not support the binary operation.
+
+## Report skill defects and contribute
+
+Contributions are explicitly welcome from humans and agents. A Books task is complete only after serving the user and filing or linking every reproducible skill defect found.
+
+- **Issue**: For schema mismatches, broken helpers or workflows, incorrect parameters, or missing profile Actions. File via GitHub CLI: `gh issue create --repo sprintberlin/openclaw-zoho-books-mcp-skill --title "bug: ..." --body "..."`.
+- **Pull request**: Preferred when you can fix and verify the defect. Follow the standard branch, test, and PR workflow.
+- See [CONTRIBUTING.md](CONTRIBUTING.md) for contribution rules and `gh` workflows.
+
+Do not file skill issues for endpoint/auth/profile setup, rate limits, transient service failures, timeouts, organization-specific custom fields, or unsupported Books operations. Never include MCP URLs, tokens, record content, contacts, or customer data.
 
 ## References
 
-- [Action profiles](references/ACTION_PROFILES.md): least-privilege starting sets
+- [Action profiles](references/ACTION_PROFILES.md): single comprehensive Books Accountant profile and least-privilege guidance
 - [Common workflows](references/COMMON_WORKFLOWS.md): ordered procedures for frequent Books tasks
 - [Complete Books Actions catalog](references/ZOHO_BOOKS_MCP_ACTIONS.md): all known Books Actions and descriptions
 - [Multi-account profiles](references/MULTI_ACCOUNT.md): portable routing for CRM, People, and Books
+- [Contributing guide](CONTRIBUTING.md): issue and pull request workflows for humans and agents
 
 Load the profile reference while configuring a connection. Load a workflow while performing that task. Load the full catalog only when the profiles do not contain a required Action.
 
