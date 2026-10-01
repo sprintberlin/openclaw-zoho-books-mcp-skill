@@ -1,62 +1,49 @@
-"""Checks that the documented Accountant profile uses real, unique catalog Actions."""
+"""Checks that the machine-readable Books Accountant profile is valid and safe."""
 
 from __future__ import annotations
 
+import json
 from pathlib import Path
 import unittest
 
-
 REPOSITORY = Path(__file__).resolve().parents[1]
-PROFILE = REPOSITORY / "references" / "ACTION_PROFILES.md"
-CATALOG = REPOSITORY / "references" / "ZOHO_BOOKS_MCP_ACTIONS.md"
+CATALOG = REPOSITORY / "references" / "actions.jsonl"
+PROFILES = REPOSITORY / "references" / "profiles.json"
 
 
-def catalog_actions() -> set[str]:
-    actions: set[str] = set()
+def load_catalog_keys() -> set[str]:
+    keys: set[str] = set()
     for line in CATALOG.read_text(encoding="utf-8").splitlines():
-        if line.startswith("| ") and not line.startswith(("| Aktion", "| :---")):
-            cells = [cell.strip() for cell in line.split("|")[1:-1]]
-            if cells:
-                actions.add(cells[0])
-    return actions
+        if line.strip():
+            keys.add(json.loads(line)["key"])
+    return keys
 
 
-def profile_actions() -> list[str]:
-    actions: list[str] = []
-    in_action_block = False
-    for line in PROFILE.read_text(encoding="utf-8").splitlines():
-        stripped = line.strip()
-        if stripped == "```text":
-            in_action_block = True
-            continue
-        if stripped == "```" and in_action_block:
-            in_action_block = False
-            continue
-        if in_action_block and stripped:
-            actions.append(stripped)
-    return actions
+def load_profile_actions(profile_id: str = "bookkeeper") -> list[str]:
+    data = json.loads(PROFILES.read_text(encoding="utf-8"))
+    return data["profiles"][profile_id]["actions"]
 
 
 class ActionProfileTests(unittest.TestCase):
     def test_profile_actions_exist_in_catalog(self):
-        catalog = catalog_actions()
-        missing = sorted(set(profile_actions()) - catalog)
+        catalog = load_catalog_keys()
+        missing = sorted(set(load_profile_actions()) - catalog)
         self.assertEqual(missing, [])
 
     def test_profile_actions_are_unique(self):
-        actions = profile_actions()
+        actions = load_profile_actions()
         self.assertEqual(len(actions), len(set(actions)))
 
     def test_profile_has_no_delete_or_bulk_mutations(self):
         forbidden = [
             action
-            for action in profile_actions()
+            for action in load_profile_actions()
             if action.startswith("delete ") or action.startswith("bulk ")
         ]
         self.assertEqual(forbidden, [])
 
     def test_profile_covers_core_accounting_workflows(self):
-        actions = set(profile_actions())
+        actions = set(load_profile_actions())
         required = {
             "create invoice",
             "create customer payment",
@@ -71,6 +58,11 @@ class ActionProfileTests(unittest.TestCase):
             "get balance sheet report",
         }
         self.assertEqual(sorted(required - actions), [])
+
+    def test_profile_fits_single_connection(self):
+        actions = load_profile_actions()
+        self.assertEqual(len(actions), 156)
+        self.assertLessEqual(len(actions), 300)
 
 
 if __name__ == "__main__":

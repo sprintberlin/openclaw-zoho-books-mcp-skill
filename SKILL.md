@@ -21,7 +21,7 @@ Treat the endpoint as a credential. Never print it, commit it, or copy it into t
 ## First setup
 
 1. Create or open a Zoho Books connection at `mcp.zoho.eu`.
-2. Select only required Actions. Start with [references/ACTION_PROFILES.md](references/ACTION_PROFILES.md).
+2. Select only required Actions. Start with the machine-readable `bookkeeper` profile: `python3 scripts/lookup_actions.py --profile bookkeeper --names-only`.
 3. Configure one endpoint with `ZOHO_BOOKS_MCP_URL`, or named accounts using [references/MULTI_ACCOUNT.md](references/MULTI_ACCOUNT.md).
 4. Configure the organization ID with `ZOHO_BOOKS_ORGANIZATION_ID` or the selected profile's `organization_id`.
 5. Inspect the selected live server with `mcporter list "$ZOHO_BOOKS_MCP_URL"`; finish only after the required Actions are present.
@@ -56,6 +56,21 @@ One-off `--mcp-url` can expose the credential in shell history or process listin
 5. Send only intended fields, then read the affected record back and compare IDs, amounts, currency, tax, status, and contact.
 6. Keep delete, void, refund, payment, bank matching, reconciliation, workflow, tax, and administrative Actions disabled unless the task explicitly requires them.
 7. Treat email, SMS, reminders, payment collection, and portal invitations as external communication requiring the active approval policy.
+
+## Action catalog and profiles
+
+Use the local lookup CLI instead of loading the full 1,090-Action catalog into context:
+
+```bash
+python3 scripts/lookup_actions.py --profiles
+python3 scripts/lookup_actions.py --profile bookkeeper
+python3 scripts/lookup_actions.py --profile bookkeeper --names-only
+python3 scripts/lookup_actions.py --search "bank reconciliation"
+python3 scripts/lookup_actions.py --action "create bank reconciliation"
+python3 scripts/lookup_actions.py --validate
+```
+
+`references/actions.jsonl` is the catalog source of truth. `references/profiles.json` is the profile source of truth. See [references/CATALOG_FORMAT.md](references/CATALOG_FORMAT.md) for format and refresh instructions.
 
 ## Bundled helpers
 
@@ -117,13 +132,15 @@ Do not file skill issues for endpoint/auth/profile setup, rate limits, transient
 
 ## References
 
-- [Action profiles](references/ACTION_PROFILES.md): single comprehensive Books Accountant profile and least-privilege guidance
+- [Action profiles](references/ACTION_PROFILES.md): human guidance for the machine-readable Books Accountant profile
+- [Machine-readable profiles](references/profiles.json): role profiles and task recipes
+- [Action catalog](references/actions.jsonl): all known Books Actions and descriptions, one JSON object per line
+- [Catalog format](references/CATALOG_FORMAT.md): schema, lookup, import, and maintenance
 - [Common workflows](references/COMMON_WORKFLOWS.md): ordered procedures for frequent Books tasks
-- [Complete Books Actions catalog](references/ZOHO_BOOKS_MCP_ACTIONS.md): all known Books Actions and descriptions
 - [Multi-account profiles](references/MULTI_ACCOUNT.md): portable routing for CRM, People, and Books
 - [Contributing guide](CONTRIBUTING.md): issue and pull request workflows for humans and agents
 
-Load the profile reference while configuring a connection. Load a workflow while performing that task. Load the full catalog only when the profiles do not contain a required Action.
+Use `scripts/lookup_actions.py` while configuring a connection or searching for an Action. Load a workflow while performing that task. Do not load the full catalog unless maintaining it.
 
 ## Troubleshooting
 

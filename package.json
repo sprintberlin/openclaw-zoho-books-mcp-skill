@@ -1,7 +1,7 @@
 {
   "name": "zoho-books-mcp",
-  "version": "1.0.0",
-  "description": "Connect agents to one or many Zoho Books organizations via MCP with portable profiles, organization-aware helper CLIs, and least-privilege action guidance.",
+  "version": "1.1.0",
+  "description": "Connect agents to one or many Zoho Books organizations via MCP with a machine-readable action catalog, portable profiles, organization-aware helper CLIs, and least-privilege action guidance.",
   "author": "SprintCX",
   "license": "MIT"
 }

@@ -7,7 +7,9 @@ This repository contains the public source for the ClawHub skill [`@sprintcx/zoh
 ## What This Skill Includes
 
 - Agent Skill instructions in `SKILL.md` (portable SKILL.md format)
-- One comprehensive Books Accountant Action profile for normal operational bookkeeping
+- Machine-readable catalog of 1,090 Actions in `references/actions.jsonl`
+- One comprehensive 156-Action Books Accountant profile in `references/profiles.json`
+- Token-efficient lookup and catalog import CLIs
 - Direct GitHub issue and pull request contribution workflow for humans and agents
 - ClawHub release card metadata in `skill-card.md`
 - Ready-to-use Python helpers for organizations and records (contacts, invoices, expenses, bills, items)
@@ -84,8 +86,21 @@ python3 scripts/list_organizations.py
 python3 scripts/list_records.py invoices --limit 20
 ```
 
+## Action Lookup
+
+```bash
+python3 scripts/lookup_actions.py --profiles
+python3 scripts/lookup_actions.py --profile bookkeeper --names-only
+python3 scripts/lookup_actions.py --search "invoice"
+python3 scripts/lookup_actions.py --validate
+```
+
+The JSONL catalog and JSON profiles are the sources of truth. See [`references/CATALOG_FORMAT.md`](references/CATALOG_FORMAT.md) for the format and catalog refresh workflow.
+
 ## Python Scripts
 
+- `scripts/lookup_actions.py`: Query Actions, profiles, and task recipes locally.
+- `scripts/import_actions.py`: Refresh the JSONL catalog from a Zoho MCP setup UI dump.
 - `scripts/list_organizations.py`: List accessible Zoho Books organizations.
 - `scripts/list_records.py`: Query contacts, invoices, expenses, bills, or items.
 - `scripts/mcp_endpoint.py`: Shared endpoint and profile resolver.
@@ -95,10 +110,14 @@ python3 scripts/list_records.py invoices --limit 20
 
 - `CONTRIBUTING.md`: Direct GitHub issue and pull request workflow for humans and agents.
 - `SKILL.md`: Agent Skill instructions.
-- `references/ACTION_PROFILES.md`: Comprehensive Books Accountant Action profile and least-privilege guidance.
+- `references/ACTION_PROFILES.md`: Human guidance for the Books Accountant profile.
+- `references/profiles.json`: Machine-readable Books Accountant profile and task recipes.
+- `references/actions.jsonl`: Complete catalog of 1,090 known Books Actions.
+- `references/CATALOG_FORMAT.md`: Catalog schema and maintenance workflow.
 - `references/COMMON_WORKFLOWS.md`: Verified workflows for frequent Books tasks.
-- `references/ZOHO_BOOKS_MCP_ACTIONS.md`: Complete catalog of 1,090 known Books Actions.
 - `references/MULTI_ACCOUNT.md`: Portable single-account and multi-account endpoint profiles.
+- `scripts/lookup_actions.py`: Query the local catalog and profiles.
+- `scripts/import_actions.py`: Refresh the catalog from a UI dump.
 - `scripts/list_organizations.py`: List accessible Books organizations.
 - `scripts/list_records.py`: Paginated listing for contacts, invoices, expenses, bills, and items.
 - `scripts/mcp_endpoint.py`: Shared endpoint, profile, and organization resolver.
